@@ -1,0 +1,56 @@
+name: Build and Release Plugin
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Der Workflow wird ausgelöst, wenn ein Tag mit dem Muster 'vX.X.X' gepusht wird (z.B. v1.0.0).
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'  # Gradle-Plugin für IntelliJ benötigt mindestens Java 11
+          distribution: 'temurin'
+
+      - name: Set up Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          wrapper-cache-enabled: true
+
+      - name: Build the plugin
+        run: ./gradlew clean build
+
+      - name: Create release artifact
+        run: mkdir -p release && cp build/libs/*.jar release/
+        # Kopiere die generierte JAR-Datei in einen Release-Ordner
+
+      - name: Upload Release Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: manim-plugin
+          path: release/*.jar
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: manim-plugin
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
