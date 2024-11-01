@@ -1,0 +1,20 @@
+plugins {
+    id 'org.jetbrains.intellij' version '1.17.4'
+    id 'java'
+}
+
+group 'com.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains:annotations:21.0.1"
+}
+
+intellij {
+    version = '2021.2.3' // Setze hier eine gültige IntelliJ-Version
+    type = 'IC'          // Optional: IntelliJ IDEA Community Edition
+}

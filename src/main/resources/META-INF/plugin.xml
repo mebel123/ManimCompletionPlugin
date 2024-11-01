@@ -1,0 +1,15 @@
+<idea-plugin>
+    <id>com.example.manimplugin</id>
+    <name>Manim Code Completion Plugin</name>
+    <vendor email="mail@matthiasebel.de" url="https://github.com/mebel123">Matthias Ebel-Koch</vendor>
+
+    <description>
+        Provides code completion for Manim scripts.
+    </description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <completion.contributor language="Python" implementationClass="de.mebel123.manimplugin.ManimCompletionContributor"/>
+    </extensions>
+</idea-plugin>
